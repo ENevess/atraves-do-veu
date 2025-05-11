@@ -3,9 +3,12 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 import openai
 import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
-app.mount("/", StaticFiles(directory=".", html=True), name="static")
+app.mount("/", StaticFiles(directory=BASE_DIR, html=True), name="static")
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
