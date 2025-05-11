@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Através do Véu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0e0e0e;
+            color: #e0e0e0;
+            font-family: 'Cinzel', serif;
+            padding: 2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: auto;
+        }
+        .fala-oraculo {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #5d3fd3;
+            font-style: italic;
+        }
+        #inputBox {
+            margin-top: 2rem;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            background: #1e1e1e;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 1rem;
+            font-size: 1rem;
+            resize: none;
+        }
+        button {
+            margin-top: 1rem;
+            background: #5d3fd3;
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border: none;
+            font-family: 'Cinzel', serif;
+            cursor: pointer;
+        }
+        #resposta {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #111;
+            border: 1px dashed #5d3fd3;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulação Iniciada — Universo 1: Através do Véu</h1>
+    <p>Contexto:<br>
+    Você acaba de atravessar o limiar de um mundo entre mundos.<br>
+    Nada do que conhecia parece real.<br>
+    E tudo o que parece real… ainda está esperando para ser compreendido.</p>
+
+    <p><strong>TOC. TOC. TOC.</strong></p>
+
+    <p>Do meio da névoa, surge o Oráculo.</p>
+
+    <div class="fala-oraculo">
+        “Acordaste no Universo 1 — o primeiro ciclo. Aqui, cada escolha esculpe a realidade.”<br>
+        “Não te darei mapa. Mas te darei espelhos.”<br>
+        “Agora, respire. E diga...”<br>
+        <em>“O que você quer encontrar aqui?”</em>
+    </div>
+
+    <p>Digite sua intenção:</p>
+
+    <p><em>Ex: “Quero entender quem eu sou.”<br>
+    Ou: “Quero fugir de algo que me persegue.”<br>
+    Ou: “Quero apenas explorar o desconhecido.”</em></p>
+
+    <div id="inputBox">
+        <textarea id="mensagem" placeholder="Digite aqui sua intenção..."></textarea>
+        <button onclick="enviarMensagem()">Enviar ao Oráculo</button>
+    </div>
+
+    <div id="resposta"></div>
+
+    <audio id="audioFundo" autoplay loop hidden>
+        <source src="audio.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="oraculo.js"></script>
+</body>
+</html>
