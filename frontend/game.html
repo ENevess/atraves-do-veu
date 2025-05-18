@@ -16,12 +16,15 @@
             align-items: center;
             justify-content: flex-start;
             height: 100vh;
+            position: relative;
         }
+
         h1 {
             margin-top: 40px;
             font-size: 2.5rem;
             text-shadow: 0 0 8px #00ffff;
         }
+
         #intro {
             margin: 30px;
             max-width: 700px;
@@ -32,6 +35,7 @@
             font-size: 1.1rem;
             line-height: 1.6;
         }
+
         #container {
             display: none;
             flex-direction: column;
@@ -42,6 +46,7 @@
             max-width: 600px;
             width: 90%;
         }
+
         input, button {
             width: 100%;
             padding: 12px;
@@ -50,43 +55,68 @@
             border: none;
             margin-bottom: 10px;
         }
+
         input {
             background: #1c1c1c;
             color: white;
         }
+
         button {
             background: #00ffff;
             color: #000;
             cursor: pointer;
             font-weight: bold;
         }
+
         button:hover {
             background: #00cccc;
         }
+
         #resposta {
             margin-top: 20px;
             font-size: 1.1rem;
             white-space: pre-wrap;
         }
-        audio {
-            display: none;
+
+        #controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+        }
+
+        #volumeControl {
+            width: 100px;
         }
     </style>
 </head>
 <body>
+    <div id="controls">
+        <button id="toggleAudio">🔈</button>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.4" title="Volume">
+    </div>
+
     <h1>👁 Através do Véu</h1>
     <div id="intro"></div>
+
     <div id="container">
         <input id="mensagem" placeholder="Faça sua pergunta ao Oráculo..." />
         <button onclick="consultar()">Consultar o Oráculo</button>
         <p id="resposta"></p>
     </div>
+
     <audio id="ambiente" loop>
         <source src="static/audio.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio ambiente.
     </audio>
+
     <script>
-        const sessao_id = Date.now().toString();
         const introducao = [
             "Você desperta.",
             "O mundo ao seu redor é estranho...",
@@ -114,10 +144,12 @@
         const introDiv = document.getElementById("intro");
         const container = document.getElementById("container");
         const audio = document.getElementById("ambiente");
+        const toggleAudioBtn = document.getElementById("toggleAudio");
+        const volumeControl = document.getElementById("volumeControl");
 
         function iniciarAudioAmbiente() {
             if (audio.paused) {
-                audio.volume = 0.4;
+                audio.volume = parseFloat(volumeControl.value);
                 audio.play().catch(() => {});
             }
         }
@@ -156,14 +188,18 @@
 
         function consultar() {
             iniciarAudioAmbiente();
+
             const mensagem = document.getElementById("mensagem").value.trim();
             const respostaElem = document.getElementById("resposta");
             if (!mensagem) return;
             respostaElem.innerText = "⌛ O Oráculo está refletindo...";
+            const sessaoId = sessionStorage.getItem("sessao_id") || crypto.randomUUID();
+            sessionStorage.setItem("sessao_id", sessaoId);
+
             fetch("/consultar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mensagem, sessao_id })
+                body: JSON.stringify({ mensagem, sessao_id: sessaoId })
             })
             .then(r => r.json())
             .then(resposta => {
@@ -175,6 +211,20 @@
                 respostaElem.innerText = "⚠️ Erro ao consultar o Oráculo.";
             });
         }
+
+        toggleAudioBtn.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+                toggleAudioBtn.textContent = "🔈";
+            } else {
+                audio.pause();
+                toggleAudioBtn.textContent = "🔇";
+            }
+        });
+
+        volumeControl.addEventListener("input", () => {
+            audio.volume = parseFloat(volumeControl.value);
+        });
 
         window.addEventListener("load", () => {
             const esperarVozes = setInterval(() => {
