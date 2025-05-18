@@ -84,7 +84,7 @@
         <p id="resposta"></p>
     </div>
 
-    <audio id="ambiente" autoplay loop>
+    <audio id="ambiente" loop>
         <source src="static/audio.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio ambiente.
     </audio>
@@ -92,20 +92,38 @@
     <script>
         const introducao = [
             "Você desperta.",
-            "O mundo ao seu redor é estranho — formas e sons parecem distorcidos, como ecos de uma realidade que não é mais sua.",
+            "O mundo ao seu redor é estranho...",
+            "— formas e sons parecem distorcidos, como ecos de uma realidade que não é mais sua.",
             "Uma presença invisível sussurra, como se estivesse em toda parte. Ela não tem rosto, mas você sente que ela vê você.",
             "Você não lembra como chegou aqui.",
             "Mas algo — ou alguém — sabe.",
-            "Uma figura se revela no nevoeiro. Ela não fala com palavras, mas com pensamentos. Um Oráculo.",
+            "Uma figura se revela no nevoeiro.",
+            "Ela não fala com palavras, mas com pensamentos.",
+            "Um Oráculo.",
             "Sua missão? Descobrir quem você é, por que está aqui...",
             "E como voltar para casa.",
-            "Mas atenção: nem toda pergunta terá resposta. Nem toda resposta será o que espera.",
+            "Mas atenção: nem toda pergunta terá resposta.",
+            "Nem toda resposta será o que espera.",
             "Respire fundo.",
-            "Através do Véu... a jornada começa agora."
+            "Através do Véu... a jornada começa agora.",
+            "🌟 Você pode...",
+            "Seguir o som distante que ecoa entre as névoas.",
+            "Falar com o Oráculo, tentando entender onde está.",
+            "Permanecer em silêncio, observando antes de agir.",
+            "Caminhar na direção oposta, desafiando o fluxo natural das coisas.",
+            "Fechar os olhos, esperando que tudo desapareça."
         ];
 
         const introDiv = document.getElementById("intro");
         const container = document.getElementById("container");
+        const audio = document.getElementById("ambiente");
+
+        function iniciarAudioAmbiente() {
+            if (audio.paused) {
+                audio.volume = 0.4;
+                audio.play().catch(() => {});
+            }
+        }
 
         function falarTexto(texto) {
             const utterance = new SpeechSynthesisUtterance(texto);
@@ -140,6 +158,8 @@
         }
 
         function consultar() {
+            iniciarAudioAmbiente();
+
             const mensagem = document.getElementById("mensagem").value.trim();
             const respostaElem = document.getElementById("resposta");
             if (!mensagem) return;
@@ -161,7 +181,6 @@
         }
 
         window.addEventListener("load", () => {
-            // Espera as vozes estarem prontas
             const esperarVozes = setInterval(() => {
                 if (speechSynthesis.getVoices().length !== 0) {
                     clearInterval(esperarVozes);
@@ -169,6 +188,9 @@
                 }
             }, 200);
         });
+
+        // Ativa som ambiente na primeira interação
+        document.body.addEventListener("click", iniciarAudioAmbiente, { once: true });
     </script>
 </body>
 </html>
