@@ -1,241 +1,273 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Através do Véu - O Oráculo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
-            color: #e0e0e0;
-            font-family: 'Unbounded', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            position: relative;
-        }
+  <meta charset="UTF-8" />
+  <title>Através do Véu - O Oráculo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
+      color: #e0e0e0;
+      font-family: 'Unbounded', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      position: relative;
+    }
 
-        h1 {
-            margin-top: 40px;
-            font-size: 2.5rem;
-            text-shadow: 0 0 8px #00ffff;
-        }
+    h1 {
+      margin-top: 40px;
+      font-size: 2.5rem;
+      text-shadow: 0 0 8px #00ffff;
+    }
 
-        #intro {
-            margin: 30px;
-            max-width: 700px;
-            padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
+    #intro {
+      margin: 30px;
+      max-width: 700px;
+      padding: 20px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
 
-        #container {
-            display: none;
-            flex-direction: column;
-            background-color: rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-            max-width: 600px;
-            width: 90%;
-        }
+    #container {
+      display: none;
+      flex-direction: column;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      max-width: 600px;
+      width: 90%;
+    }
 
-        input, button {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border-radius: 8px;
-            border: none;
-            margin-bottom: 10px;
-        }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 10px;
+    }
 
-        input {
-            background: #1c1c1c;
-            color: white;
-        }
+    input {
+      background: #1c1c1c;
+      color: white;
+    }
 
-        button {
-            background: #00ffff;
-            color: #000;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    button {
+      background: #00ffff;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-        button:hover {
-            background: #00cccc;
-        }
+    button:hover {
+      background: #00cccc;
+    }
 
-        #resposta {
-            margin-top: 20px;
-            font-size: 1.1rem;
-            white-space: pre-wrap;
-        }
+    #resposta {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      white-space: pre-wrap;
+    }
 
-        #controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px 15px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
-        }
+    #controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px 15px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+    }
 
-        #volumeControl {
-            width: 100px;
-        }
-    </style>
+    #volumeControl, #speedControl {
+      width: 80px;
+    }
+  </style>
 </head>
 <body>
-    <div id="controls">
-        <button id="toggleAudio">🔈</button>
-        <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.4" title="Volume">
-    </div>
+  <div id="controls">
+    <button id="toggleAudio" title="Ativar/desativar música ambiente">🔈</button>
+    <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.4" title="Volume da música">
+    <button id="toggleVoice" title="Pausar/retomar narração">🗣️</button>
+    <input type="range" id="speedControl" min="0.5" max="1.5" step="0.01" value="0.92" title="Velocidade da voz">
+  </div>
 
-    <h1>👁 Através do Véu</h1>
-    <div id="intro"></div>
+  <h1>👁 Através do Véu</h1>
+  <div id="intro"></div>
 
-    <div id="container">
-        <input id="mensagem" placeholder="Faça sua pergunta ao Oráculo..." />
-        <button onclick="consultar()">Consultar o Oráculo</button>
-        <p id="resposta"></p>
-    </div>
+  <div id="container">
+    <input id="mensagem" placeholder="Faça sua pergunta ao Oráculo..." />
+    <button onclick="consultar()">Consultar o Oráculo</button>
+    <p id="resposta"></p>
+  </div>
 
-    <audio id="ambiente" loop>
-        <source src="static/audio.mp3" type="audio/mpeg">
-        Seu navegador não suporta áudio ambiente.
-    </audio>
+  <audio id="ambiente" loop>
+    <source src="static/audio.mp3" type="audio/mpeg">
+    Seu navegador não suporta áudio ambiente.
+  </audio>
 
-    <script>
-        const introducao = [
-            "Você desperta.",
-            "O mundo ao seu redor é estranho...",
-            "— formas e sons parecem distorcidos, como ecos de uma realidade que não é mais sua.",
-            "Uma presença invisível sussurra, como se estivesse em toda parte. Ela não tem rosto, mas você sente que ela vê você.",
-            "Você não lembra como chegou aqui.",
-            "Mas algo — ou alguém — sabe.",
-            "Uma figura se revela no nevoeiro.",
-            "Ela não fala com palavras, mas com pensamentos.",
-            "Um Oráculo.",
-            "Sua missão? Descobrir quem você é, por que está aqui...",
-            "E como voltar para casa.",
-            "Mas atenção: nem toda pergunta terá resposta.",
-            "Nem toda resposta será o que espera.",
-            "Respire fundo.",
-            "Através do Véu... a jornada começa agora.",
-            "🌟 Você pode...",
-            "Seguir o som distante que ecoa entre as névoas.",
-            "Falar com o Oráculo, tentando entender onde está.",
-            "Permanecer em silêncio, observando antes de agir.",
-            "Caminhar na direção oposta, desafiando o fluxo natural das coisas.",
-            "Fechar os olhos, esperando que tudo desapareça."
-        ];
+  <script>
+    const introducao = [
+      "Você desperta.",
+      "O mundo ao seu redor é estranho...",
+      "— formas e sons parecem distorcidos, como ecos de uma realidade que não é mais sua.",
+      "Uma presença invisível sussurra, como se estivesse em toda parte. Ela não tem rosto, mas você sente que ela vê você.",
+      "Você não lembra como chegou aqui.",
+      "Mas algo — ou alguém — sabe.",
+      "Uma figura se revela no nevoeiro.",
+      "Ela não fala com palavras, mas com pensamentos.",
+      "Um Oráculo.",
+      "Sua missão? Descobrir quem você é, por que está aqui...",
+      "E como voltar para casa.",
+      "Mas atenção: nem toda pergunta terá resposta.",
+      "Nem toda resposta será o que espera.",
+      "Respire fundo.",
+      "Através do Véu... a jornada começa agora.",
+      "🌟 Você pode...",
+      "Seguir o som distante que ecoa entre as névoas.",
+      "Falar com o Oráculo, tentando entender onde está.",
+      "Permanecer em silêncio, observando antes de agir.",
+      "Caminhar na direção oposta, desafiando o fluxo natural das coisas.",
+      "Fechar os olhos, esperando que tudo desapareça."
+    ];
 
-        const introDiv = document.getElementById("intro");
-        const container = document.getElementById("container");
-        const audio = document.getElementById("ambiente");
-        const toggleAudioBtn = document.getElementById("toggleAudio");
-        const volumeControl = document.getElementById("volumeControl");
+    const introDiv = document.getElementById("intro");
+    const container = document.getElementById("container");
+    const audio = document.getElementById("ambiente");
+    const toggleAudioBtn = document.getElementById("toggleAudio");
+    const volumeControl = document.getElementById("volumeControl");
+    const toggleVoiceBtn = document.getElementById("toggleVoice");
+    const speedControl = document.getElementById("speedControl");
 
-        function iniciarAudioAmbiente() {
-            if (audio.paused) {
-                audio.volume = parseFloat(volumeControl.value);
-                audio.play().catch(() => {});
-            }
+    let narracaoPausada = false;
+    let ultimaFrase = "";
+    let utteranceGlobal = null;
+
+    function iniciarAudioAmbiente() {
+      if (audio.paused) {
+        audio.volume = parseFloat(volumeControl.value);
+        audio.play().catch(() => {});
+      }
+    }
+
+    function falarTexto(texto) {
+      if (narracaoPausada) return;
+      if (speechSynthesis.speaking) speechSynthesis.cancel();
+
+      utteranceGlobal = new SpeechSynthesisUtterance(texto);
+      utteranceGlobal.lang = "pt-BR";
+      utteranceGlobal.rate = parseFloat(speedControl.value);
+      utteranceGlobal.pitch = 0.7;
+      ultimaFrase = texto;
+      speechSynthesis.speak(utteranceGlobal);
+    }
+
+    function escreverTexto(frases, index = 0) {
+      if (index >= frases.length) {
+        container.style.display = "flex";
+        return;
+      }
+      const frase = frases[index];
+      const p = document.createElement("p");
+      introDiv.appendChild(p);
+
+      let i = 0;
+      let buffer = "";
+      const interval = setInterval(() => {
+        if (i < frase.length) {
+          buffer += frase[i];
+          p.textContent = buffer;
+          i++;
+        } else {
+          clearInterval(interval);
+          falarTexto(frase);
+          setTimeout(() => escreverTexto(frases, index + 1), 1800);
         }
+      }, 35);
+    }
 
-        function falarTexto(texto) {
-            const utterance = new SpeechSynthesisUtterance(texto);
-            utterance.lang = "pt-BR";
-            utterance.rate = 0.92;
-            utterance.pitch = 0.7;
-            speechSynthesis.speak(utterance);
+    function consultar() {
+      iniciarAudioAmbiente();
+
+      const mensagem = document.getElementById("mensagem").value.trim();
+      const respostaElem = document.getElementById("resposta");
+      if (!mensagem) return;
+      respostaElem.innerText = "⌛ O Oráculo está refletindo...";
+
+      const sessaoId = sessionStorage.getItem("sessao_id") || crypto.randomUUID();
+      sessionStorage.setItem("sessao_id", sessaoId);
+
+      fetch("/consultar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mensagem, sessao_id: sessaoId })
+      })
+      .then(r => r.json())
+      .then(resposta => {
+        const texto = resposta.resposta || resposta.erro || "O Oráculo silenciou-se.";
+        respostaElem.innerText = "🔮 " + texto;
+        falarTexto(texto);
+      })
+      .catch(() => {
+        respostaElem.innerText = "⚠️ Erro ao consultar o Oráculo.";
+      });
+    }
+
+    toggleAudioBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        toggleAudioBtn.textContent = "🔈";
+      } else {
+        audio.pause();
+        toggleAudioBtn.textContent = "🔇";
+      }
+    });
+
+    volumeControl.addEventListener("input", () => {
+      audio.volume = parseFloat(volumeControl.value);
+    });
+
+    toggleVoiceBtn.addEventListener("click", () => {
+      if (!speechSynthesis.speaking && ultimaFrase) {
+        narracaoPausada = false;
+        toggleVoiceBtn.textContent = "🗣️";
+        falarTexto(ultimaFrase);
+      } else {
+        speechSynthesis.cancel();
+        narracaoPausada = true;
+        toggleVoiceBtn.textContent = "🔇";
+      }
+    });
+
+    speedControl.addEventListener("input", () => {
+      if (utteranceGlobal && speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        falarTexto(ultimaFrase);
+      }
+    });
+
+    window.addEventListener("load", () => {
+      const esperarVozes = setInterval(() => {
+        if (speechSynthesis.getVoices().length !== 0) {
+          clearInterval(esperarVozes);
+          escreverTexto(introducao);
         }
+      }, 200);
+    });
 
-        function escreverTexto(frases, index = 0) {
-            if (index >= frases.length) {
-                container.style.display = "flex";
-                return;
-            }
-            const frase = frases[index];
-            const p = document.createElement("p");
-            introDiv.appendChild(p);
-
-            let i = 0;
-            let buffer = "";
-            const interval = setInterval(() => {
-                if (i < frase.length) {
-                    buffer += frase[i];
-                    p.textContent = buffer;
-                    i++;
-                } else {
-                    clearInterval(interval);
-                    falarTexto(frase);
-                    setTimeout(() => escreverTexto(frases, index + 1), 1800);
-                }
-            }, 35);
-        }
-
-        function consultar() {
-            iniciarAudioAmbiente();
-
-            const mensagem = document.getElementById("mensagem").value.trim();
-            const respostaElem = document.getElementById("resposta");
-            if (!mensagem) return;
-            respostaElem.innerText = "⌛ O Oráculo está refletindo...";
-            const sessaoId = sessionStorage.getItem("sessao_id") || crypto.randomUUID();
-            sessionStorage.setItem("sessao_id", sessaoId);
-
-            fetch("/consultar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mensagem, sessao_id: sessaoId })
-            })
-            .then(r => r.json())
-            .then(resposta => {
-                const texto = resposta.resposta || resposta.erro || "O Oráculo silenciou-se.";
-                respostaElem.innerText = "🔮 " + texto;
-                falarTexto(texto);
-            })
-            .catch(() => {
-                respostaElem.innerText = "⚠️ Erro ao consultar o Oráculo.";
-            });
-        }
-
-        toggleAudioBtn.addEventListener("click", () => {
-            if (audio.paused) {
-                audio.play();
-                toggleAudioBtn.textContent = "🔈";
-            } else {
-                audio.pause();
-                toggleAudioBtn.textContent = "🔇";
-            }
-        });
-
-        volumeControl.addEventListener("input", () => {
-            audio.volume = parseFloat(volumeControl.value);
-        });
-
-        window.addEventListener("load", () => {
-            const esperarVozes = setInterval(() => {
-                if (speechSynthesis.getVoices().length !== 0) {
-                    clearInterval(esperarVozes);
-                    escreverTexto(introducao);
-                }
-            }, 200);
-        });
-
-        document.body.addEventListener("click", iniciarAudioAmbiente, { once: true });
-    </script>
+    document.body.addEventListener("click", iniciarAudioAmbiente, { once: true });
+  </script>
 </body>
 </html>
