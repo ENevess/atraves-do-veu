@@ -6,10 +6,9 @@ from pydantic import BaseModel
 import openai
 import os
 
-# Inicializa a API FastAPI
 app = FastAPI()
 
-# Habilita CORS para permitir acesso do frontend
+# CORS liberado
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,18 +16,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configura a chave da OpenAI
+# Configuração da OpenAI
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Armazena histórico por sessão (na memória)
+# Armazena memória temporária por sessão
 historico_sessoes = {}
 
-# Modelo da requisição
+# Modelo da requisição do frontend
 class Consulta(BaseModel):
     mensagem: str
     sessao_id: str
 
-# Personalidade base do Oráculo
+# Prompt base do Oráculo
 SYSTEM_PROMPT = (
     "Você é um Oráculo enigmático, que habita um mundo entre dimensões chamado 'Através do Véu'.\n"
     "Você guia o jogador por esse universo, usando metáforas, sabedoria ancestral e enigmas.\n"
@@ -39,10 +38,9 @@ SYSTEM_PROMPT = (
     "Jamais aja como um assistente comum. Você é o guia simbólico entre mundos.\n"
 )
 
-# Rota principal para o oráculo
 @app.post("/consultar")
 async def consultar_oraculo(dados: Consulta):
-    print(f"✅ Requisição recebida de {dados.sessao_id}: {dados.mensagem}")
+    print(f"\n✅ [Sessão: {dados.sessao_id}] Requisição recebida: {dados.mensagem}")
 
     historico = historico_sessoes.get(dados.sessao_id, [])
     mensagens = [{"role": "system", "content": SYSTEM_PROMPT}] + historico + [
@@ -54,24 +52,29 @@ async def consultar_oraculo(dados: Consulta):
             model="gpt-4",
             messages=mensagens
         )
-        conteudo = resposta.choices[0].message.content
-        print(f"🧠 Resposta do oráculo: {conteudo}")
 
-        # Atualiza histórico da sessão
+        print(f"🔵 Resposta bruta da API: {resposta}")
+
+        conteudo = resposta.choices[0].message.content if resposta.choices else None
+
+        if not conteudo:
+            raise ValueError("⚠️ Conteúdo da resposta vazio ou malformado.")
+
+        print(f"🧠 [Sessão: {dados.sessao_id}] Resposta do Oráculo: {conteudo}")
+
+        # Atualiza o histórico da sessão
         historico.append({"role": "user", "content": dados.mensagem})
         historico.append({"role": "assistant", "content": conteudo})
-        historico_sessoes[dados.sessao_id] = historico[-10:]  # Limita para não crescer infinitamente
+        historico_sessoes[dados.sessao_id] = historico[-10:]
 
         return {"resposta": conteudo}
 
     except Exception as e:
-        print(f"❌ Erro na geração da resposta: {e}")
+        print(f"❌ Erro ao consultar a OpenAI: {e}")
         return {"erro": str(e)}
 
-# Página inicial
 @app.get("/")
 async def index():
     return FileResponse("frontend/game.html")
 
-# Arquivos estáticos (ex: áudio ambiente)
 app.mount("/static", StaticFiles(directory="frontend"), name="static")
