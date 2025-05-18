@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Através do Véu</title>
+</head>
+<body>
+    <h1>Bem-vindo ao Oráculo</h1>
+    <input id="mensagem" placeholder="Digite sua pergunta..." />
+    <button onclick="consultar()">Consultar Oráculo</button>
+    <p id="resposta"></p>
+    <script>
+        async function consultar() {
+            const mensagem = document.getElementById("mensagem").value;
+            const respostaElem = document.getElementById("resposta");
+            respostaElem.innerText = "Consultando...";
+            const resposta = await fetch("/consultar", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({mensagem})
+            }).then(r => r.json());
+            respostaElem.innerText = resposta.resposta || resposta.erro || "Erro desconhecido.";
+        }
+    </script>
+</body>
+</html>
