@@ -75,21 +75,18 @@
 </head>
 <body>
     <h1>👁 Através do Véu</h1>
-
     <div id="intro"></div>
-
     <div id="container">
         <input id="mensagem" placeholder="Faça sua pergunta ao Oráculo..." />
         <button onclick="consultar()">Consultar o Oráculo</button>
         <p id="resposta"></p>
     </div>
-
     <audio id="ambiente" loop>
         <source src="static/audio.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio ambiente.
     </audio>
-
     <script>
+        const sessao_id = Date.now().toString();
         const introducao = [
             "Você desperta.",
             "O mundo ao seu redor é estranho...",
@@ -159,7 +156,6 @@
 
         function consultar() {
             iniciarAudioAmbiente();
-
             const mensagem = document.getElementById("mensagem").value.trim();
             const respostaElem = document.getElementById("resposta");
             if (!mensagem) return;
@@ -167,7 +163,7 @@
             fetch("/consultar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mensagem })
+                body: JSON.stringify({ mensagem, sessao_id })
             })
             .then(r => r.json())
             .then(resposta => {
@@ -189,7 +185,6 @@
             }, 200);
         });
 
-        // Ativa som ambiente na primeira interação
         document.body.addEventListener("click", iniciarAudioAmbiente, { once: true });
     </script>
 </body>
