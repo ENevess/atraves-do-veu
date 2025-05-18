@@ -16,12 +16,21 @@
             align-items: center;
             justify-content: flex-start;
             height: 100vh;
-            overflow: hidden;
         }
         h1 {
             margin-top: 40px;
             font-size: 2.5rem;
             text-shadow: 0 0 8px #00ffff;
+        }
+        #intro {
+            margin: 30px;
+            max-width: 700px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.6;
         }
         #container {
             display: none;
@@ -58,16 +67,6 @@
             margin-top: 20px;
             font-size: 1.1rem;
             white-space: pre-wrap;
-        }
-        #intro {
-            margin: 30px;
-            max-width: 700px;
-            padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1.1rem;
-            line-height: 1.6;
         }
         audio {
             display: none;
@@ -108,80 +107,68 @@
         const introDiv = document.getElementById("intro");
         const container = document.getElementById("container");
 
+        function falarTexto(texto) {
+            const utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = "pt-BR";
+            utterance.rate = 0.92;
+            utterance.pitch = 0.7;
+            speechSynthesis.speak(utterance);
+        }
+
         function escreverTexto(frases, index = 0) {
             if (index >= frases.length) {
                 container.style.display = "flex";
                 return;
             }
-
             const frase = frases[index];
-            const paragrafo = document.createElement("p");
-            introDiv.appendChild(paragrafo);
+            const p = document.createElement("p");
+            introDiv.appendChild(p);
 
             let i = 0;
-            const intervalo = setInterval(() => {
+            let buffer = "";
+            const interval = setInterval(() => {
                 if (i < frase.length) {
                     buffer += frase[i];
-                paragrafo.textContent = buffer;
+                    p.textContent = buffer;
                     i++;
                 } else {
-                    clearInterval(intervalo);
+                    clearInterval(interval);
                     falarTexto(frase);
                     setTimeout(() => escreverTexto(frases, index + 1), 1800);
                 }
             }, 35);
         }
 
-        function falarTexto(texto) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = "pt-BR";
-                utterance.rate = 0.92;
-                utterance.pitch = 0.7;
-                utterance.voice = speechSynthesis.getVoices().find(v => v.lang === "pt-BR") || null;
-                speechSynthesis.speak(utterance);
-            }
-        }
-
-        async function consultar() {
+        function consultar() {
             const mensagem = document.getElementById("mensagem").value.trim();
             const respostaElem = document.getElementById("resposta");
             if (!mensagem) return;
             respostaElem.innerText = "⌛ O Oráculo está refletindo...";
-            try {
-                const resposta = await fetch("/consultar", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ mensagem })
-                }).then(r => r.json());
-
+            fetch("/consultar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mensagem })
+            })
+            .then(r => r.json())
+            .then(resposta => {
                 const texto = resposta.resposta || resposta.erro || "O Oráculo silenciou-se.";
                 respostaElem.innerText = "🔮 " + texto;
                 falarTexto(texto);
-            } catch (e) {
+            })
+            .catch(() => {
                 respostaElem.innerText = "⚠️ Erro ao consultar o Oráculo.";
-            }
+            });
         }
 
-        // Início
-        let vozesCarregadas = false;
-
-        function iniciarIntroducao() {
-            if (!vozesCarregadas) return;
-            escreverTexto(introducao);
-        }
-
-        window.speechSynthesis.onvoiceschanged = () => {
-            vozesCarregadas = true;
-            iniciarIntroducao();
-        };
-
-        window.onload = () => {
-            if (speechSynthesis.getVoices().length > 0) {
-                vozesCarregadas = true;
-                iniciarIntroducao();
-            }
-        };
+        window.addEventListener("load", () => {
+            // Espera as vozes estarem prontas
+            const esperarVozes = setInterval(() => {
+                if (speechSynthesis.getVoices().length !== 0) {
+                    clearInterval(esperarVozes);
+                    escreverTexto(introducao);
+                }
+            }, 200);
+        });
     </script>
 </body>
 </html>
